@@ -10,7 +10,7 @@ public class TextCalculator {
         if (isBlank(text)) {
             return 0;
         }
-        return sum2(toInts(split(text)));
+        return sum(toInts(split(text)));
     }
 
     // 구분하는 기능
@@ -41,18 +41,13 @@ public class TextCalculator {
         return number;
     }
 
-    // 바뀐 숫자를 더하는 기능
-    private int sum2(int[] numbers) {
-        boolean negativeNum = Arrays.stream(numbers).anyMatch(it -> it < 0);
-        if (negativeNum) {
-            throw new RuntimeException("음수는 문자열 계산기에 들어갈 수 없습니다.");
-        }
+    // (개선 후, 단지 더하기만 수행한다.)바뀐 숫자를 더하는 기능
+    private int sum(int[] numbers) {
         return Arrays.stream(numbers).sum();
     }
 
-    // 하나의 메서드의 두가지 책임을 가지고 있다. (String -> int 변환, 합하는 부분)
-
     /**
+     * 하나의 메서드의 두가지 책임을 가지고 있다. (String -> int 변환, 합하는 부분)
      * (개선전)
      * private int sum(String[] split) {
      *         int sum = 0;
