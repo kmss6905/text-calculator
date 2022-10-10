@@ -3,6 +3,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -20,7 +23,7 @@ class TextCalculatorTest {
     @DisplayName("빈 문자열 또는 null 값을 입력할 경우 0을 반환한다.")
     void notNullAndEmptyTest() {
         String emptyText = "";
-        int parse = cal.parse(emptyText);
+        int parse = cal.add(emptyText);
         assertThat(parse).isEqualTo(0);
     }
 
@@ -29,7 +32,7 @@ class TextCalculatorTest {
     @ValueSource(strings = {"1,2,3", "1,2:3", "1:2,3"})
     void sum(String arg) {
         // when
-        int sum = cal.parse(arg);
+        int sum = cal.add(arg);
 
         // then
         assertThat(sum).isEqualTo(6);
@@ -40,16 +43,16 @@ class TextCalculatorTest {
     @ValueSource(strings = {"-1,2,3", "1,2:-3", "1:-2,3"})
     void shouldExceptionWhenNegative(String arg) {
         // then
-        assertThatThrownBy(() -> cal.parse(arg))
+        assertThatThrownBy(() -> cal.add(arg))
                 .isInstanceOf(RuntimeException.class);
     }
 
     @ParameterizedTest
     @DisplayName("앞의 기본 구분자(쉼표, 콜론) 외에 커스텀 구분자를 지정할 수 있다. 커스텀 구분자는 문자열 앞부분의 \"//\" 와 \"\\n\"사이에 위치하는 문자를 커스텀 구분자로 사용한다.")
-    @ValueSource(strings = {"//;\n1,2,3", "//;;;;\n1,2,3", "1,2//;\n3"})
+    @ValueSource(strings = {"//;\n1;2;3"})
     void customSplitFinalTest(String arg) {
         // when
-        int sum = cal.parse(arg);
+        int sum = cal.add(arg);
 
         // then
         assertThat(sum).isEqualTo(6);
